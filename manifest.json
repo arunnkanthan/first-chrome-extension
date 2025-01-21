@@ -1,12 +1,12 @@
 {
-  "name": "Covid-19 Stats UK",
+  "name": "Copy Links",
   "version": "1.0.0",
-  "description": "latest covid data of UK",
+  "description": "buttons to click to copy LinkedIn and GitHub account links",
   "manifest_version": 3,
-  "author": "Sampurna Chapagain",
+  "author": "Arunn Chanthirakanthan",
   "action": {
     "default_popup": "index.html",
-    "default_title": "Latest Covid Report"
+    "default_title": "Copy Links"
   },
   "permissions": ["clipboardRead", "clipboardWrite"]
 }
