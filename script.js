@@ -3,31 +3,8 @@
 // need a 'logot' request
 // need a settings button that takes them directly to the app to their settings page
 
-// async function fetchData() {
-//     const data = [
-//         {
-//             date: 0,
-//             areaName: 1,
-//             latestBy: 2,
-//             deathNew: 4
-//         }
-//     ]
-    
-//     // this gets url from the broswer of where the chrome extension is on
-//     chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, await function(tabs) {
-//         document.getElementById("currentUrl").innerHTML=tabs[0].url;
-//     });
 
-//     document.getElementById("linkedin").innerHTML= "https://www.linkedin.com/in/arunnkanthan/";
-//     document.getElementById("date").innerHTML=data[0].date;
-//     document.getElementById("areaName").innerHTML=data[0].areaName;
-//     document.getElementById("latestBy").innerHTML=data[0].latestBy;
-//     document.getElementById("deathNew").innerHTML=data[0].deathNew;
-    
-// }
-
-// fetchData();
-
+// TODO: move to a utils file
 const getCurrentDateMMDDYYYY = async () => {
   const today = new Date();
   const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-based
@@ -36,7 +13,9 @@ const getCurrentDateMMDDYYYY = async () => {
   return `${month}/${day}/${year}`;
 }
 
+// TODO: move this to a config file and update dynamically
 document.getElementById('LinkedInCopyButton').addEventListener('click', async function() {
+    event.preventDefault();
     try {
   
       // Write the updated content back to the clipboard
@@ -50,6 +29,7 @@ document.getElementById('LinkedInCopyButton').addEventListener('click', async fu
   });
 
   document.getElementById('githubCopyButton').addEventListener('click', async function() {
+    event.preventDefault();
     try {
   
       // Write the updated content back to the clipboard
@@ -63,6 +43,7 @@ document.getElementById('LinkedInCopyButton').addEventListener('click', async fu
   });
 
   document.getElementById('projectCopyButton').addEventListener('click', async function() {
+    event.preventDefault();
     try {
   
       // Write the updated content back to the clipboard
@@ -76,6 +57,7 @@ document.getElementById('LinkedInCopyButton').addEventListener('click', async fu
   });
 
   document.getElementById('whyThisCompanyCopyButton').addEventListener('click', async function() {
+    event.preventDefault();
     try {
   
       // Write the updated content back to the clipboard
