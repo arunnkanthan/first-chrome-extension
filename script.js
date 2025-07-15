@@ -28,6 +28,14 @@
 
 // fetchData();
 
+const getCurrentDateMMDDYYYY = async () => {
+  const today = new Date();
+  const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+  const day = String(today.getDate()).padStart(2, '0');
+  const year = today.getFullYear();
+  return `${month}/${day}/${year}`;
+}
+
 document.getElementById('LinkedInCopyButton').addEventListener('click', async function() {
     try {
   
@@ -79,3 +87,32 @@ document.getElementById('LinkedInCopyButton').addEventListener('click', async fu
       console.error('Failed to read or write to the clipboard: ', err);
     }
   });
+
+  document.getElementById('submitButton').addEventListener('click', async function() {
+    event.preventDefault();
+    try {
+      const companyName = await document.getElementById('companyName').value;
+      const positionTitle = await document.getElementById('positionTitle').value;
+      const postionLink = await document.getElementById('postionLink').value;
+      const jobBoard = await document.getElementById('jobBoard').value;
+      const workLocation = await document.querySelector('input[name="workLocation"]:checked')?.value || '';
+      const date = await getCurrentDateMMDDYYYY();
+      
+      const job = {
+        companyName,
+        positionTitle,
+        postionLink,
+        jobBoard,
+        workLocation,
+        date
+      }
+
+      // TODO: send this to the my google sheet to record the job
+      console.log(job);
+      // window.close();
+    } catch (err) {
+      console.error('Failed', err);
+    }
+  });
+
+  
