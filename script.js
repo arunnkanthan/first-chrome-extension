@@ -73,20 +73,24 @@ document.getElementById('LinkedInCopyButton').addEventListener('click', async fu
   document.getElementById('submitButton').addEventListener('click', async function() {
     event.preventDefault();
     try {
+
+      // TODO: some of these need to be required
       const companyName = await document.getElementById('companyName').value;
       const positionTitle = await document.getElementById('positionTitle').value;
       const postionLink = await document.getElementById('postionLink').value;
       const jobBoard = await document.getElementById('jobBoard').value;
       const workLocation = await document.querySelector('input[name="workLocation"]:checked')?.value || '';
+      const notes = await document.getElementById('notes')?.value || ''; 
       const date = await getCurrentDateMMDDYYYY();
       
       const job = {
+        date, 
         companyName,
         positionTitle,
         postionLink,
         jobBoard,
         workLocation,
-        date
+        notes
       }
 
       // TODO: send this to the my google sheet to record the job
