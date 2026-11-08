@@ -8,5 +8,11 @@
     "default_popup": "index.html",
     "default_title": "Copy Links"
   },
-  "permissions": ["clipboardRead", "clipboardWrite"]
+  "permissions": [
+    "clipboardWrite"
+  ],
+  "host_permissions": [
+    "https://script.google.com/*",
+    "https://script.googleusercontent.com/*"
+  ]
 }

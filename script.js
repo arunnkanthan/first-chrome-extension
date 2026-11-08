@@ -5,7 +5,7 @@
 
 
 // TODO: move to a utils file
-const getCurrentDateMMDDYYYY = async () => {
+const getCurrentDateMMDDYYYY = () => {
   const today = new Date();
   const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-based
   const day = String(today.getDate()).padStart(2, '0');
@@ -70,35 +70,57 @@ document.getElementById('LinkedInCopyButton').addEventListener('click', async fu
     }
   });
 
-  document.getElementById('submitButton').addEventListener('click', async function() {
+  const setStatus = (message, isError = false) => {
+    const statusElement = document.getElementById('status');
+    statusElement.textContent = message;
+    statusElement.className = 'childContent ' + (isError ? 'status-error' : 'status-ok');
+  };
+
+  const sendJobToSheet = async (job) => {
+    if (typeof SHEETS_CONFIG === 'undefined' || !SHEETS_CONFIG.webAppUrl || SHEETS_CONFIG.webAppUrl.includes('XXXX')) {
+      throw new Error('Set webAppUrl and secret in config.js');
+    }
+    // text/plain avoids a CORS preflight, which Apps Script web apps don't answer
+    const response = await fetch(SHEETS_CONFIG.webAppUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ secret: SHEETS_CONFIG.secret, job }),
+    });
+    const result = await response.json();
+    if (!result.ok) throw new Error(result.error || 'Unknown error from Apps Script');
+    return result;
+  };
+
+  document.getElementById('jobForm').addEventListener('submit', async (event) => {
     event.preventDefault();
+    const form = event.target;
+    const submitButton = document.getElementById('submitButton');
+
+    const job = {
+      date: getCurrentDateMMDDYYYY(),
+      companyName: document.getElementById('companyName').value.trim(),
+      positionTitle: document.getElementById('positionTitle').value.trim(),
+      positionLink: document.getElementById('positionLink').value.trim(),
+      jobBoard: document.getElementById('jobBoard').value.trim(),
+      workLocation: document.querySelector('input[name="workLocation"]:checked')?.value || '',
+      notes: document.getElementById('notes').value.trim(),
+    };
+
+    if (!job.companyName || !job.positionTitle || !job.positionLink) {
+      setStatus('Company, position and URL are required.', true);
+      return;
+    }
+
+    submitButton.disabled = true;
+    setStatus('Saving...');
     try {
-
-      // TODO: some of these need to be required
-      const companyName = await document.getElementById('companyName').value;
-      const positionTitle = await document.getElementById('positionTitle').value;
-      const postionLink = await document.getElementById('postionLink').value;
-      const jobBoard = await document.getElementById('jobBoard').value;
-      const workLocation = await document.querySelector('input[name="workLocation"]:checked')?.value || '';
-      const notes = await document.getElementById('notes')?.value || ''; 
-      const date = await getCurrentDateMMDDYYYY();
-      
-      const job = {
-        date, 
-        companyName,
-        positionTitle,
-        postionLink,
-        jobBoard,
-        workLocation,
-        notes
-      }
-
-      // TODO: send this to the my google sheet to record the job
-      console.log(job);
-      // window.close();
+      const { row } = await sendJobToSheet(job);
+      setStatus(`Saved to row ${row} ✓`);
+      form.reset();
     } catch (err) {
-      console.error('Failed', err);
+      console.error('Failed to save job', err);
+      setStatus(err.message, true);
+    } finally {
+      submitButton.disabled = false;
     }
   });
-
-  
