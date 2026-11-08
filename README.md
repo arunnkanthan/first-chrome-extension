@@ -1,12 +1,6 @@
-# First Chrome Extension: Copy Link Buttons
+# First Chrome Extension: Job Search Tracker
 
-A simple Chrome extension that allows you to copy predefined links with the click of a button. Upon clicking the extension icon, a popup will appear with two buttons. Clicking either button copies the associated link to your clipboard. This is a basic project to understand how to create a chrome extension
-
-## Features
-
-- Click the extension icon to open a popup with two buttons.
-- Each button copies a specific URL to your clipboard.
-- Simple and user-friendly interface for quickly sharing links.
+A Chrome Exntesion that post job application details to be stored in a google sheet.
 
 ## Setup
 
