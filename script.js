@@ -61,7 +61,7 @@ document.getElementById('LinkedInCopyButton').addEventListener('click', async fu
     try {
   
       // Write the updated content back to the clipboard
-      await navigator.clipboard.writeText("I'm a software engineer, who's language agnostic, with 6 years of full stack experience including 2 years of leading and mentoring junior engineers. Most of professional experience has been in startups and I'm looking for new opportunities in that space. I'm comfortable in fast pace environments, and enjoy collaborating with other engineers, product teams, design teams and other organizations with in the company.");
+      await navigator.clipboard.writeText("I'm a software engineer, who's language agnostic, with 6 years of full stack experience including 2 years of leading and mentoring junior engineers. Most of my professional experience has been in startups and I'm looking for new opportunities in that space. I'm comfortable in fast paced environments, and enjoy collaborating with other engineers, product teams, design teams and other organizations within the company.");
       window.close();
   
       console.log('Clipboard updated successfully!');
