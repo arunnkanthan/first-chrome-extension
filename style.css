@@ -9,11 +9,3 @@
 .childContent{ 
     margin: 10px;
 }
-
-.status-ok {
-    color: #1a7f37;
-}
-
-.status-error {
-    color: #cf222e;
-}

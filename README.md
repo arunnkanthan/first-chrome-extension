@@ -1,6 +1,12 @@
-# First Chrome Extension: Job Search Tracker
+# First Chrome Extension: Copy Link Buttons
 
-A Chrome Exntesion that post job application details to be stored in a google sheet.
+A simple Chrome extension that allows you to copy predefined links with the click of a button. Upon clicking the extension icon, a popup will appear with two buttons. Clicking either button copies the associated link to your clipboard. This is a basic project to understand how to create a chrome extension
+
+## Features
+
+- Click the extension icon to open a popup with two buttons.
+- Each button copies a specific URL to your clipboard.
+- Simple and user-friendly interface for quickly sharing links.
 
 ## Setup
 
@@ -30,75 +36,6 @@ git clone git@github.com:arunnkanthan/first-chrome-extension.git
    - The two buttons should appear, and you can click them to copy the links to your clipboard.
 
 
-
-## Connect to Google Sheets (job tracker)
-
-The job form in the popup saves each job as a new row in the `2026_job_search` tab of the job search spreadsheet. The extension doesn't sign in to Google itself. Instead, it POSTs the job to a small **Google Apps Script web app** attached to the spreadsheet, and that script writes the row.
-
-```
-Popup form  --POST (JSON + secret)-->  Apps Script web app (/exec)  -->  2026_job_search tab
-```
-
-### What gets written
-
-| Column | Value |
-|---|---|
-| A Date | Today's date (MM/DD/YYYY) |
-| B Company | Company Name |
-| C Position | `=HYPERLINK(url, position)` |
-| D Job board | Job Board |
-| E Progress | *(left blank)* |
-| F End Date | *(left blank)* |
-| G Work Location | REMOTE / HYBRID / ONSITE |
-| H Notes | Any notes |
-
-The script adds the job on the row after the last filled **Company** cell (data starts at row 3; row 2 is the header). It rejects duplicates (same URL, or same company and position) and stops if the header row has changed.
-
-### 1. Add the script to the spreadsheet
-
-1. Open the spreadsheet, then go to **Extensions → Apps Script**.
-2. Replace the editor contents with [`apps-script/Code.gs`](apps-script/Code.gs) and save.
-3. Click the gear icon (**Project Settings**), scroll to **Script Properties**, and add:
-   - Property: `SHARED_SECRET`
-   - Value: a long random string (for example, run `python3 -c "import secrets;print(secrets.token_urlsafe(32))"`)
-
-### 2. Deploy it as a web app
-
-1. Click **Deploy → New deployment**, click the gear icon next to "Select type", and choose **Web app**.
-2. Set **Execute as: Me** and **Who has access: Anyone**, then click **Deploy**.
-   - Google will warn that the app isn't verified. Click **Advanced → Go to (project name)** and allow it. That's expected for your own script.
-   - "Anyone" only means the URL works without a Google sign-in. A request can't write anything without the secret.
-3. Copy the **Web app URL**, which ends in `/exec` (not the Deployment ID by itself, and not the `/dev` test URL).
-4. Check it: open the URL in a browser. You should see `{"ok":true,"sheet":"2026_job_search"}`.
-
-### 3. Configure the extension
-
-1. Copy `config.example.js` to `config.js`. (`config.js` is gitignored, so the URL and secret stay out of GitHub.)
-2. Fill in both values:
-   ```js
-   const SHEETS_CONFIG = {
-     webAppUrl: 'https://script.google.com/macros/s/<deployment-id>/exec',
-     secret: '<same value as SHARED_SECRET>',
-   };
-   ```
-3. Go to `chrome://extensions` and click the reload icon on the extension.
-4. Open the popup, fill in the form, and click **Submit**. You should see `Saved to row N ✓`.
-
-### Updating the script later
-
-Saving `Code.gs` alone doesn't change the live web app. Go to **Deploy → Manage deployments**, click the pencil icon, set **Version: New version**, and click **Deploy**. The `/exec` URL stays the same, so `config.js` doesn't change.
-
-### Troubleshooting
-
-| Message in the popup | Fix |
-|---|---|
-| `Set webAppUrl and secret in config.js` | `config.js` is missing or still has the placeholder values |
-| `Unauthorized: secret missing or wrong` | The `secret` in `config.js` doesn't match the `SHARED_SECRET` script property |
-| `Already in the sheet (row N)` | That job is already tracked |
-| `Header row changed: ...` | The header row (row 2) was edited; update `EXPECTED_HEADERS` in `Code.gs` and redeploy |
-| `Unexpected token '<'` / HTML instead of JSON | The URL is wrong, or the deployment's access isn't set to **Anyone** |
-
-**Note:** the popup closes if you click outside it, which cancels a save in progress. Wait for the "Saved" message first.
 
 ## Future Add-Ons
 
